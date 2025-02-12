@@ -69,6 +69,6 @@ const (
 //}
 
 func main() {
-	fmt.Println(rand.String(10))
+	fmt.Println(rand.Strings(10))
 	fmt.Println(rand.RememberToken())
 }

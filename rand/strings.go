@@ -24,10 +24,10 @@ func Bytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-// String will generate a byte slice of size nBytes and then
+// Strings will generate a byte slice of size nBytes and then
 // return a string that is the base64 URL encoded version
 // of that byte slice
-func String(nBytes int) (string, error) {
+func Strings(nBytes int) (string, error) {
 	b, err := Bytes(nBytes)
 	if err != nil {
 		return "", err
