@@ -36,5 +36,5 @@ func Strings(nBytes int) (string, error) {
 }
 
 func RememberToken() (string, error) {
-	return String(RememberTokenBytes)
+	return Strings(RememberTokenBytes)
 }
