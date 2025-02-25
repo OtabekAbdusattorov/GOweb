@@ -82,6 +82,25 @@ func (us *UserService) Create(user *User) error {
 	return us.db.Create(user).Error
 }
 
+func (us *UserService) Authenticate(email string, password string) (*User, error) {
+	foundUser, err := us.ByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(foundUser.PasswordHash),
+		[]byte(password+userPwdPepper))
+
+	switch {
+	case err == nil:
+		return foundUser, nil
+	case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
+		return nil, ErrInvalidPassword
+	default:
+		return nil, err
+	}
+}
+
 func (us *UserService) Close() error {
 	return us.db.Close()
 }
@@ -142,25 +161,6 @@ func (us *UserService) DestructiveReset() error {
 		return nil
 	}
 	return us.AutoMigrate()
-}
-
-func (us *UserService) Authenticate(email string, password string) (*User, error) {
-	foundUser, err := us.ByEmail(email)
-	if err != nil {
-		return nil, err
-	}
-	err = bcrypt.CompareHashAndPassword(
-		[]byte(foundUser.PasswordHash),
-		[]byte(password+userPwdPepper))
-
-	switch {
-	case err == nil:
-		return foundUser, nil
-	case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
-		return nil, ErrInvalidPassword
-	default:
-		return nil, err
-	}
 }
 
 func (us *UserService) AutoMigrate() error {
